@@ -9,6 +9,8 @@
 
 ![twoge-EKS Cluster](https://github.com/asanni2022/twoge_eks/assets/104282577/adc4d75e-8047-4912-a726-44b3ff5c8b89)
 
+During this project's first phase, we will deploy the web application Twoge on our local machine via Minikube. Once that deployment is successful, we will then shift to using AWS Elastic Kubernetes Service to host our app.
+
 
 ### Git Repo
 ```
@@ -218,12 +220,12 @@ kubectl apply -f Namespace.yaml                                 # create namespa
 kubectl apply -f ResourceQuota.yml                              # create resourcequota
 kubectl apply -f . --namespace twoge-ns                         # attach all resource to namespace
 kubectl get resourcequotas --namespace twoge-ns                 # apply resourcequota twoge-ns resourcequota
-kubectl config set-context --current --namespace=twoge-ns       # Set namespace preference
-kubectl get pods --namespace twoge-ns                           # get pods associated with twoge-ns namespace
+kubectl config set-context --current --namespace=twoge-ns       # set namespace preference
+kubectl get all                                                 # confirm all pods are up and running
 
 ```
 
-###  Validate
+###  Confirm that Twoge is up and running on your local host
 ```
 minikube service twoge-k8s-service -n twoge-ns --url
 ```
@@ -249,7 +251,9 @@ kubectl describe pods/twoge-dep-77fdb57d87-kz6m5
 
 # Deployment Via EKS Cluster
 
-### Update Service.yml file
+Now that we have successfully deployed our app via Minikube, we will now make some small configuration changes and set up our EKS cluster.
+
+### Update Service.yml file by editing the Port type
 ```
 apiVersion: v1
 kind: Service
@@ -264,12 +268,12 @@ spec:
     app: twoge-k8s
 ```
 
-### Validate 
+### Creater EKS Cluster 
 ```
-kubectl get all
-kubectl describe pod/twoge-dep-86f797bc56-r8tg7
-kubectl get pods --namespace twoge-ns
+eksctl create cluster --region us-west-2 --node-type t2.small --nodes 1 --nodes-min 1 --nodes-max 1 --name penny-twoge
 ```
+
+Once the cluster has been created (this may take several minutes), you can log into AWS and verify that your application is being hosted on an EC2 instance. 
 
 ![eks-twoge](https://github.com/asanni2022/twoge_eks/assets/104282577/7de47090-31b6-43ce-97cb-54dc67f5b37a)
 
@@ -281,9 +285,8 @@ kubectl get pods --namespace twoge-ns
 
 ## Challenges
 ```
+Initial Pod Creation
 Minikube Vs EKS Cluster
-PV and PVC Issues on EKS Cluster
-Setting up a RDS/ Postgres on server
 ```
 
 
