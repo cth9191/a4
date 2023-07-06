@@ -275,6 +275,8 @@ eksctl create cluster --region us-west-2 --node-type t2.small --nodes 1 --nodes-
 
 Once the cluster has been created (this may take several minutes), you can log into AWS and verify that your application is being hosted on an EC2 instance. 
 
+![eks](https://github.com/cth9191/a4/blob/main/1.JPG)
+
 ![eks-twoge](https://github.com/asanni2022/twoge_eks/assets/104282577/7de47090-31b6-43ce-97cb-54dc67f5b37a)
 
 
