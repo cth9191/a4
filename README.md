@@ -197,7 +197,7 @@ spec:
                 key: postgres-password
 ```
 
-### create twoge Postgres service yml file
+### Create twoge Postgres service yml file
 ```
 apiVersion: v1
 kind: Service
