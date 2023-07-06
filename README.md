@@ -22,13 +22,6 @@ https://github.com/chandradeoarya/twoge/tree/k8s
 ### Create Dockerfile
 ```
 FROM python:alpine
-
-ENV  DB_USER=twoge
-ENV  DB_PASSWORD=<twogepassword>
-ENV  DB_HOST=<yourtwogehost>
-ENV  DB_PORT=5432
-ENV  DB_DATABASE=<yourtwoge_dbname>
-
 RUN apk update && \
     apk add --no-cache build-base libffi-dev openssl-dev
 COPY . /app
@@ -40,7 +33,7 @@ CMD python app.py
 
 #### Build Dockerfile
 ```
-docker build -t asanni2022/twoge-eks .
+docker build -t cth91/twoge-new .
 docker push asanni2022/twoge-eks 
 ```
 
@@ -88,12 +81,12 @@ metadata:
   name: postgres-secret
 type: Opaque
 data:
-  db_name: <your database name>
-  username: <your username>
-  password: <your password>
+  postgres-database: <your database name>
+  postgres-username: <your username>
+  postgres-password: <your password>
 ```
 
-### Create twoge web deployment yml file
+### Create twoge web deployment yml file with readiness probe
 ```
 apiVersion: apps/v1
 kind: Deployment
@@ -113,30 +106,35 @@ spec:
     spec:
       containers:
         - name: twoge-container
-          image: asanni2022/twoge-eks
+          image: cth91/twoge-new
           ports:
             - containerPort: 8080
+          readinessProbe:
+           tcpSocket:
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 20
           env:
             - name: DB_DATABASE
               valueFrom:
                 secretKeyRef:
                   name: postgres-secret
-                  key: db_name
+                  key: postgres-database
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
                   name: postgres-secret
-                  key: username
+                  key: postgres-username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: postgres-secret
-                  key: password
+                  key: postgres-password
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
                   name: postgres-configmap
-                  key: database_url
+                  key: database_host
             - name: DB_PORT
               valueFrom:
                 configMapKeyRef:
@@ -184,17 +182,17 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: postgres-secret
-                key: db_name
+                key: dpostgres-database
           - name: POSTGRES_USER
             valueFrom:
               secretKeyRef:
                 name: postgres-secret
-                key: username
+                key: postgres-username
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: postgres-secret
-                key: password
+                key: postgres-password
 ```
 
 ### create twoge Postgres service yml file
@@ -211,174 +209,13 @@ spec:
   - port: 5432
 ```
 
-### Persistent Volume PV yml file
-```
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: mypv
-  labels:
-    team: twoge
-spec:
-  capacity:
-    storage: 2Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
-  storageClassName: slow
-  hostPath:
-    path: "/data"
-```
 
-### Persistent Volume Claim PVC yml file
-```
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: twoge-pvc
-spec:
-  accessModes:
-    - ReadWriteMany
-  volumeMode: Filesystem
-  resources:
-    requests:
-      storage: 1Gi
-  selector:
-    matchLabels:
-      team: twoge
-```
 
-### Twoge web deployment with PVC Volume yml file
-```
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: twoge-dep
-  labels:
-    app: twoge-k8s
-spec:
-  selector:
-    matchLabels:
-      app: twoge-k8s
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: twoge-k8s
-    spec:
-      containers:
-        - name: twoge-container
-          image: asanni2022/twoge-eks
-          ports:
-            - containerPort: 8080
-          volumeMounts:
-            - mountPath: "/data"
-              name: twoge-pvc-storage
-          env:
-            - name: DB_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: db_name
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: username
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: password
-            - name: DB_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-configmap
-                  key: database_url
-            - name: DB_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-configmap
-                  key: database_port
-      volumes:
-        - name: twoge-pvc-storage
-          persistentVolumeClaim:
-            claimName: twoge-pvc
-```
 
-### Define a TCP liveness probe
-```
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: twoge-dep
-  labels:
-    app: twoge-k8s
-spec:
-  selector:
-    matchLabels:
-      app: twoge-k8s
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: twoge-k8s
-    spec:
-      containers:
-        - name: twoge-container
-          image: asanni2022/twoge-eks
-          ports:
-            - containerPort: 8080
-          volumeMounts:
-            - mountPath: "/data"
-              name: twoge-pvc-storage
-          readinessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          livenessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 15
-            periodSeconds: 20
-          env:
-            - name: DB_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: db_name
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: username
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: password
-            - name: DB_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-configmap
-                  key: database_url
-            - name: DB_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: postgres-configmap
-                  key: database_port
-      volumes:
-        - name: twoge-pvc-storage
-          persistentVolumeClaim:
-            claimName: twoge-pvc
-```
-
-### Run Commands
+### Commands
 ```
 kubectl apply -f Namespace.yaml                                 # create namespace
 kubectl apply -f ResourceQuota.yml                              # create resourcequota
-kubectl describe namespaces twoge-ns                            # describe twoge-ns namespace
 kubectl apply -f . --namespace twoge-ns                         # attach all resource to namespace
 kubectl get resourcequotas --namespace twoge-ns                 # apply resourcequota twoge-ns resourcequota
 kubectl config set-context --current --namespace=twoge-ns       # Set namespace preference
