@@ -3,11 +3,6 @@
 
 ### Deploy twoge web application with Postgres DB using Kubernetes and Minikube
 
-<img width="1100" alt="twoge-Minikube" src="https://github.com/asanni2022/twoge_eks/assets/104282577/624e31ba-4c08-4678-8a1a-7dfd9a99d18b">
-
-### Deploy twoge web application with Postgres DB using Kubernetes EKS cluster
-
-![twoge-EKS Cluster](https://github.com/asanni2022/twoge_eks/assets/104282577/adc4d75e-8047-4912-a726-44b3ff5c8b89)
 
 During this project's first phase, we will deploy the web application Twoge on our local machine via Minikube. Once that deployment is successful, we will then shift to using AWS Elastic Kubernetes Service to host our app.
 
