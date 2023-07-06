@@ -236,19 +236,6 @@ minikube service twoge-k8s-service -n twoge-ns --url
 
 
 
-### Probe Readiness and Liveness Check
-```
-kubectl describe pod/twoge-dep-645f6b46c-qd6wk
-```
-
-
-
-
-```
-kubectl describe pods/twoge-dep-77fdb57d87-kz6m5
-```
-
-
 # Deployment Via EKS Cluster
 
 Now that we have successfully deployed our app via Minikube, we will now make some small configuration changes and set up our EKS cluster.
