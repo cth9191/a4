@@ -229,25 +229,25 @@ kubectl get all                                                 # confirm all po
 ```
 minikube service twoge-k8s-service -n twoge-ns --url
 ```
-![Ns](https://github.com/asanni2022/twoge_eks/assets/104282577/0ca7d64d-cf23-4d0d-add7-2d3d55d7de50)
+
 
 
 ![twoge2](https://github.com/asanni2022/twoge_eks/assets/104282577/eb5f5fe7-afca-4ae7-8cec-321125499434)
 
-![twoge1](https://github.com/asanni2022/twoge_eks/assets/104282577/64f7cf4c-3304-4248-ba8b-27b3b76efaac)
+
 
 ### Probe Readiness and Liveness Check
 ```
 kubectl describe pod/twoge-dep-645f6b46c-qd6wk
 ```
 
-![twoge Probe](https://github.com/asanni2022/twoge_eks/assets/104282577/d010b2f6-84cd-4947-94d5-6a780d7748a3)
+
 
 
 ```
 kubectl describe pods/twoge-dep-77fdb57d87-kz6m5
 ```
-![twoge describe](https://github.com/asanni2022/twoge_eks/assets/104282577/f38cc66e-8b22-48a4-93d8-94166fdc2cdc)
+
 
 # Deployment Via EKS Cluster
 
@@ -277,11 +277,7 @@ Once the cluster has been created (this may take several minutes), you can log i
 
 ![eks](https://github.com/cth9191/a4/blob/main/1.JPG)
 
-![eks-twoge](https://github.com/asanni2022/twoge_eks/assets/104282577/7de47090-31b6-43ce-97cb-54dc67f5b37a)
 
-
-
-![EKS-screen](https://github.com/asanni2022/twoge_eks/assets/104282577/7d3a5a14-e4d5-419b-a6f4-bf201a82a9f0)
 
 
 
