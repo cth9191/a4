@@ -75,7 +75,7 @@ data:
   database_port: "5432"
 ```
 
-### Create secrets.tml file
+### Create secrets.yml file
 ```
 apiVersion: v1
 kind: Secret
