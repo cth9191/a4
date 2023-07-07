@@ -29,7 +29,7 @@ CMD python app.py
 #### Build Dockerfile
 ```
 docker build -t cth91/twoge-new .
-docker push asanni2022/twoge-eks 
+docker push cth91/twoge-new 
 ```
 
 ### Create Namespase.yml file
