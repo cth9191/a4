@@ -264,7 +264,7 @@ Once the cluster has been created (this may take several minutes), you can log i
 ## Challenges
 ```
 Initial Pod Creation
-Minikube Vs EKS Cluster
+Initial EKS Creation
 ```
 
 
