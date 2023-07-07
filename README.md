@@ -1,5 +1,6 @@
 # Twoge Web App Deployment via Minikube and EKS Cluster
 
+![dia][(https://github.com/cth9191/a4/blob/main/3.JPG)]
 
 During this project's first phase, we will deploy the web application Twoge on our local machine via Minikube. Once that deployment is successful, we will then shift to using AWS Elastic Kubernetes Service to host our app.
 
