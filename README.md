@@ -207,7 +207,7 @@ spec:
 
 
 
-### Commands
+### Kubetl Commands
 ```
 kubectl apply -f Namespace.yaml                                 # create namespace
 kubectl apply -f ResourceQuota.yml                              # create resourcequota
