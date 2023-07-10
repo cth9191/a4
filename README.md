@@ -177,7 +177,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: postgres-secret
-                key: dpostgres-database
+                key: postgres-database
           - name: POSTGRES_USER
             valueFrom:
               secretKeyRef:
